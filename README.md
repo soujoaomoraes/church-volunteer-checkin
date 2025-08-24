@@ -1,73 +1,246 @@
-# Welcome to your Lovable project
+# 🏛️ Sistema de Check-in/Check-out - Igreja Central
 
-## Project info
+Sistema PWA (Progressive Web App) para controle de entrada e saída de voluntários da igreja, com rastreamento de equipamentos e funcionalidade offline.
 
-**URL**: https://lovable.dev/projects/0b65ffbf-1f00-4b89-bcc6-c70ec077e6b1
+## 🚀 Características
 
-## How can I edit this code?
+- **📱 PWA Nativo**: Instalável em dispositivos móveis e desktop
+- **🌐 Offline-First**: Funciona sem conexão à internet
+- **📊 Google Sheets**: Backend integrado com planilhas Google
+- **⚡ Zero Dependências**: Vanilla JavaScript puro
+- **🎨 Mobile-First**: Interface otimizada para tablets e smartphones
+- **🔄 Sync Automático**: Sincronização automática quando online
+- **🔔 Notificações**: Toast messages e feedback visual
+- **♿ Acessível**: Suporte completo a leitores de tela
 
-There are several ways of editing your application.
+## 🏗️ Arquitetura
 
-**Use Lovable**
+```
+PWA Frontend ↔ Google Apps Script ↔ Google Sheets
+```
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/0b65ffbf-1f00-4b89-bcc6-c70ec077e6b1) and start prompting.
+- **Frontend**: Vanilla JavaScript PWA
+- **Backend**: Google Apps Script (serverless)
+- **Database**: Google Sheets
+- **Hosting**: GitHub Pages (gratuito)
+- **Cache**: Service Worker + IndexedDB
 
-Changes made via Lovable will be committed automatically to this repo.
+## 📁 Estrutura do Projeto
 
-**Use your preferred IDE**
+```
+├── index.html          # Página principal do PWA
+├── sw.js               # Service Worker
+├── manifest.json       # Manifesto PWA
+├── package.json        # Scripts e dependências de dev
+├── css/
+│   └── styles.css      # Sistema de design CSS
+├── js/
+│   ├── app.js          # Inicialização da aplicação
+│   ├── config.js       # Configurações centrais
+│   ├── utils.js        # Funções utilitárias
+│   ├── validation.js   # Validação de formulários
+│   ├── api.js          # Integração com Google Apps Script
+│   ├── ui.js           # Controle de interface
+│   ├── checkin.js      # Lógica de check-in
+│   └── checkout.js     # Lógica de check-out
+├── assets/
+│   ├── icons/          # Ícones PWA
+│   └── images/         # Imagens do app
+└── docs/               # Documentação completa
+    ├── SETUP.md        # Guia de instalação
+    ├── API.md          # Documentação da API
+    └── CHANGELOG.md    # Histórico de mudanças
+```
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## ⚡ Início Rápido
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### 1. Clone o Repositório
 
-Follow these steps:
+```bash
+git clone https://github.com/seu-usuario/church-volunteer-checkin.git
+cd church-volunteer-checkin
+```
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+### 2. Instale Dependências (Desenvolvimento)
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+```bash
+npm install
+```
 
-# Step 3: Install the necessary dependencies.
-npm i
+### 3. Execute Localmente
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+```bash
+npm start
+# ou
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+Acesse: `http://localhost:8080`
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### 4. Build para Produção
 
-**Use GitHub Codespaces**
+```bash
+npm run build
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## 🔧 Configuração
 
-## What technologies are used for this project?
+### Frontend (js/config.js)
 
-This project is built with:
+```javascript
+const CONFIG = {
+  CHURCH: {
+    NAME: 'Igreja Central',
+    SESSIONS: ['1º Culto', '2º Culto', 'Escola Bíblica']
+  },
+  API: {
+    BASE_URL: 'https://script.google.com/macros/s/{SCRIPT_ID}/exec'
+  }
+};
+```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+### Backend (Google Apps Script)
 
-## How can I deploy this project?
+1. Crie uma nova planilha Google Sheets
+2. Abra Apps Script (`script.google.com`)
+3. Implemente os endpoints da API
+4. Publique como web app
+5. Configure as permissões
 
-Simply open [Lovable](https://lovable.dev/projects/0b65ffbf-1f00-4b89-bcc6-c70ec077e6b1) and click on Share -> Publish.
+Ver [docs/API.md](docs/API.md) para detalhes completos.
 
-## Can I connect a custom domain to my Lovable project?
+## 📱 Funcionalidades
 
-Yes, you can!
+### ✅ Check-in de Voluntários
+- Formulário com validação em tempo real
+- Seleção de equipamentos
+- Formatação automática de telefone
+- Autocomplete de nomes
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+### ✅ Check-out de Voluntários
+- Busca por nome ou telefone
+- Controle de devolução de itens
+- Rastreamento de pendências
+- Histórico de atividades
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+### ✅ Funcionalidade Offline
+- Cache inteligente de recursos
+- Armazenamento local de dados
+- Sincronização automática
+- Indicadores de status de conexão
+
+### ✅ Interface Responsiva
+- Design mobile-first
+- Suporte a touch e teclado
+- Modo escuro automático
+- Acessibilidade completa
+
+## 🚀 Deploy
+
+### GitHub Pages (Recomendado)
+
+1. **Configure o repositório:**
+   ```bash
+   git add .
+   git commit -m "Deploy PWA"
+   git push origin main
+   ```
+
+2. **Ative GitHub Pages:**
+   - Settings → Pages
+   - Source: Deploy from branch
+   - Branch: main / root
+
+3. **Configure domínio personalizado (opcional):**
+   - Adicione arquivo `CNAME`
+   - Configure DNS do domínio
+
+### Outros Provedores
+
+- **Netlify**: Arraste a pasta do projeto
+- **Vercel**: Conecte o repositório GitHub
+- **Firebase Hosting**: `firebase deploy`
+
+Ver [docs/SETUP.md](docs/SETUP.md) para instruções detalhadas.
+
+## 🔒 Segurança
+
+- **HTTPS obrigatório** para funcionalidade PWA
+- **CSP headers** recomendados
+- **Rate limiting** no Google Apps Script
+- **Validação** client-side e server-side
+- **Sanitização** de dados de entrada
+
+## 🧪 Testes
+
+```bash
+# Servidor de desenvolvimento
+npm run dev
+
+# Teste PWA (HTTPS)
+npm run serve:https
+
+# Validação de código
+npm run lint
+
+# Teste de performance
+npm run lighthouse
+```
+
+## 📊 Monitoramento
+
+- **Google Analytics**: Métricas de uso
+- **Lighthouse**: Performance e PWA score
+- **Apps Script Logs**: Debugging backend
+- **Browser DevTools**: Debug frontend
+
+## 🤝 Contribuição
+
+1. Fork o projeto
+2. Crie uma branch: `git checkout -b feature/nova-funcionalidade`
+3. Commit: `git commit -m 'Adiciona nova funcionalidade'`
+4. Push: `git push origin feature/nova-funcionalidade`
+5. Abra um Pull Request
+
+## 📝 Documentação
+
+- **[SETUP.md](docs/SETUP.md)**: Guia completo de instalação
+- **[API.md](docs/API.md)**: Documentação da API
+- **[CHANGELOG.md](docs/CHANGELOG.md)**: Histórico de mudanças
+
+## 🐛 Problemas Conhecidos
+
+- Service Worker requer HTTPS em produção
+- IndexedDB não funciona em modo privado
+- Push notifications requerem configuração adicional
+
+Ver [docs/SETUP.md#troubleshooting](docs/SETUP.md#troubleshooting) para soluções.
+
+## 🗺️ Roadmap
+
+- [ ] **Backend**: Google Apps Script API
+- [ ] **Database**: Configuração Google Sheets
+- [ ] **Auth**: Sistema de autenticação
+- [ ] **Icons**: Criação de ícones PWA
+- [ ] **Tests**: Testes automatizados
+- [ ] **CI/CD**: Pipeline de deploy
+- [ ] **Analytics**: Dashboard de relatórios
+- [ ] **Push**: Notificações push
+- [ ] **Multi-church**: Suporte múltiplas igrejas
+
+## 📄 Licença
+
+MIT License - veja [LICENSE](LICENSE) para detalhes.
+
+## 🙏 Créditos
+
+Desenvolvido com ❤️ para a **Igreja Central**
+
+- **Tecnologias**: HTML5, CSS3, Vanilla JavaScript
+- **APIs**: Google Apps Script, Google Sheets
+- **Hosting**: GitHub Pages
+- **Design**: Mobile-first, Acessível
+
+---
+
+**📱 Instale o app:** Visite o site no seu dispositivo e clique em "Instalar" ou "Adicionar à tela inicial"

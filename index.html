@@ -1,27 +1,413 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema de Voluntários - Igreja Central</title>
-    <meta name="description" content="Sistema de check-in e check-out para voluntários da Igreja Central. Gerencie presença e equipamentos de forma simples e eficiente." />
-    <meta name="author" content="Igreja Central" />
-    <meta name="theme-color" content="#2196F3" />
-    <link rel="manifest" href="/manifest.json" />
-    <link rel="icon" href="/placeholder.svg" type="image/svg+xml" />
+    <meta name="description" content="Sistema de check-in e check-out para voluntários da Igreja Central. Gerencie presença e equipamentos de forma simples e eficiente.">
+    <meta name="author" content="Igreja Central">
+    <meta name="theme-color" content="#2196F3">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="/icons/icon-192.png">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Sistema de Voluntários - Igreja Central">
+    <meta property="og:description" content="Sistema de check-in e check-out para voluntários da Igreja Central">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="/icons/icon-512.png">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-content">
+            <div class="loading-icon">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="m22 21-3-3m0 0a5.5 5.5 0 1 0-7.78-7.78 5.5 5.5 0 0 0 7.78 7.78Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <h2>Sistema de Voluntários</h2>
+            <p>Carregando...</p>
+        </div>
+    </div>
 
-    <meta property="og:title" content="Sistema de Voluntários - Igreja Central" />
-    <meta property="og:description" content="Sistema de check-in e check-out para voluntários da Igreja Central" />
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+    <!-- Main App Container -->
+    <div id="app" class="app hidden">
+        <!-- Navigation Header -->
+        <header id="header" class="header">
+            <button id="back-btn" class="back-btn hidden" aria-label="Voltar">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="m15 18-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+            <div class="header-content">
+                <div class="header-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="m22 21-3-3m0 0a5.5 5.5 0 1 0-7.78-7.78 5.5 5.5 0 0 0 7.78 7.78Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <div class="header-text">
+                    <h1 id="page-title">Sistema de Voluntários</h1>
+                    <p id="page-subtitle">Igreja Central</p>
+                </div>
+            </div>
+        </header>
 
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@lovable_dev" />
-    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
-  </head>
+        <!-- Main Content -->
+        <main id="main-content" class="main-content">
+            <!-- Home Page -->
+            <div id="home-page" class="page active">
+                <!-- Status Card -->
+                <div class="status-card">
+                    <div class="status-info">
+                        <div class="status-indicator">
+                            <svg id="status-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="m3 17 6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M9 1v22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="m20 7 6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <span id="status-text">Online</span>
+                        </div>
+                        <div class="sync-info">
+                            <p>Última sync</p>
+                            <p id="last-sync">--:--</p>
+                        </div>
+                    </div>
+                </div>
 
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="stat-present">--</div>
+                        <div class="stat-label">Presentes</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="stat-today">--</div>
+                        <div class="stat-label">Hoje</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="stat-pending">--</div>
+                        <div class="stat-label">Pendentes</div>
+                    </div>
+                </div>
+
+                <!-- Current Time -->
+                <div class="time-card">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                        <polyline points="12,6 12,12 16,14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span id="current-time">--:--</span>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button id="checkin-btn" class="btn btn-success btn-large">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <circle cx="8.5" cy="7" r="4" stroke="currentColor" stroke-width="2"/>
+                            <line x1="20" x2="20" y1="8" y2="14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            <line x1="23" x2="17" y1="11" y2="11" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                        <span>Check-in</span>
+                        <div class="btn-badge">Entrada</div>
+                    </button>
+                    
+                    <button id="checkout-btn" class="btn btn-primary btn-large">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <circle cx="8.5" cy="7" r="4" stroke="currentColor" stroke-width="2"/>
+                            <line x1="23" x2="17" y1="11" y2="11" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                        <span>Check-out</span>
+                        <div class="btn-badge btn-badge-outline">Saída</div>
+                    </button>
+                </div>
+
+                <!-- System Status -->
+                <div class="system-status">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <polyline points="22,12 18,12 15,21 9,3 6,12 2,12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span>Sistema funcionando normalmente</span>
+                </div>
+
+                <!-- Footer -->
+                <footer class="footer">
+                    <p>Sistema de Voluntários v1.0 • Igreja Central</p>
+                </footer>
+            </div>
+
+            <!-- Check-in Page -->
+            <div id="checkin-page" class="page">
+                <div class="page-content">
+                    <!-- Current Time -->
+                    <div class="time-card">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                            <polyline points="12,6 12,12 16,14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span id="checkin-time">--:--</span>
+                    </div>
+
+                    <!-- Check-in Form -->
+                    <form id="checkin-form" class="form-card">
+                        <div class="form-header">
+                            <h2>Dados do Voluntário</h2>
+                            <p>Preencha as informações para registrar sua entrada</p>
+                        </div>
+
+                        <div class="form-content">
+                            <!-- Nome -->
+                            <div class="form-field">
+                                <label for="checkin-nome" class="form-label">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2"/>
+                                    </svg>
+                                    Nome completo *
+                                </label>
+                                <input 
+                                    type="text" 
+                                    id="checkin-nome" 
+                                    name="nome"
+                                    class="form-input" 
+                                    placeholder="Digite seu nome completo"
+                                    required
+                                    autocomplete="name"
+                                >
+                                <div class="form-error" id="nome-error"></div>
+                            </div>
+
+                            <!-- Telefone -->
+                            <div class="form-field">
+                                <label for="checkin-telefone" class="form-label">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    Telefone *
+                                </label>
+                                <input 
+                                    type="tel" 
+                                    id="checkin-telefone" 
+                                    name="telefone"
+                                    class="form-input" 
+                                    placeholder="(11) 99999-9999"
+                                    required
+                                    autocomplete="tel"
+                                >
+                                <div class="form-error" id="telefone-error"></div>
+                            </div>
+
+                            <!-- Sessão -->
+                            <div class="form-field">
+                                <label for="checkin-sessao" class="form-label">Sessão/Evento *</label>
+                                <select id="checkin-sessao" name="sessao" class="form-select" required>
+                                    <option value="">Selecione a sessão</option>
+                                    <option value="1º Culto (Manhã)">1º Culto (Manhã)</option>
+                                    <option value="2º Culto (Tarde)">2º Culto (Tarde)</option>
+                                    <option value="3º Culto (Noite)">3º Culto (Noite)</option>
+                                    <option value="Ensaio">Ensaio</option>
+                                    <option value="Evento Especial">Evento Especial</option>
+                                    <option value="Reunião de Liderança">Reunião de Liderança</option>
+                                </select>
+                                <div class="form-error" id="sessao-error"></div>
+                            </div>
+
+                            <!-- Itens -->
+                            <div class="form-field">
+                                <label class="form-label">Itens retirados</label>
+                                <div class="checkbox-group" id="itens-group">
+                                    <label class="checkbox-item">
+                                        <input type="checkbox" name="itens" value="Crachá de Identificação">
+                                        <span class="checkbox-custom"></span>
+                                        <span>Crachá de Identificação</span>
+                                    </label>
+                                    <label class="checkbox-item">
+                                        <input type="checkbox" name="itens" value="Rádio Comunicador">
+                                        <span class="checkbox-custom"></span>
+                                        <span>Rádio Comunicador</span>
+                                    </label>
+                                    <label class="checkbox-item">
+                                        <input type="checkbox" name="itens" value="Chaves (Portões/Salas)">
+                                        <span class="checkbox-custom"></span>
+                                        <span>Chaves (Portões/Salas)</span>
+                                    </label>
+                                    <label class="checkbox-item">
+                                        <input type="checkbox" name="itens" value="Equipamento de Som">
+                                        <span class="checkbox-custom"></span>
+                                        <span>Equipamento de Som</span>
+                                    </label>
+                                    <label class="checkbox-item">
+                                        <input type="checkbox" name="itens" value="Material de Limpeza">
+                                        <span class="checkbox-custom"></span>
+                                        <span>Material de Limpeza</span>
+                                    </label>
+                                    <label class="checkbox-item">
+                                        <input type="checkbox" name="itens" value="Instrumentos Musicais">
+                                        <span class="checkbox-custom"></span>
+                                        <span>Instrumentos Musicais</span>
+                                    </label>
+                                    <label class="checkbox-item">
+                                        <input type="checkbox" name="itens" value="Material de Decoração">
+                                        <span class="checkbox-custom"></span>
+                                        <span>Material de Decoração</span>
+                                    </label>
+                                    <label class="checkbox-item">
+                                        <input type="checkbox" name="itens" value="Outros" id="outros-checkbox">
+                                        <span class="checkbox-custom"></span>
+                                        <span>Outros</span>
+                                    </label>
+                                </div>
+                                
+                                <!-- Campo Outros Itens -->
+                                <div class="form-field hidden" id="outros-field">
+                                    <input 
+                                        type="text" 
+                                        id="outros-itens" 
+                                        name="outrosItens"
+                                        class="form-input" 
+                                        placeholder="Descreva outros itens retirados"
+                                    >
+                                </div>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <button type="submit" class="btn btn-success btn-full" id="checkin-submit">
+                                <span class="btn-text">Confirmar Check-in</span>
+                                <div class="btn-spinner hidden">
+                                    <div class="spinner"></div>
+                                    <span>Registrando...</span>
+                                </div>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Check-out Page -->
+            <div id="checkout-page" class="page">
+                <div class="page-content">
+                    <!-- Current Time -->
+                    <div class="time-card">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                            <polyline points="12,6 12,12 16,14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span id="checkout-time">--:--</span>
+                    </div>
+
+                    <!-- Search Form -->
+                    <div class="form-card">
+                        <div class="form-header">
+                            <h2>Buscar Voluntário</h2>
+                            <p>Digite o nome para localizar o check-in pendente</p>
+                        </div>
+
+                        <div class="form-content">
+                            <div class="form-field">
+                                <label for="volunteer-search" class="form-label">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
+                                        <path d="m21 21-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    Nome do voluntário
+                                </label>
+                                <div class="search-input-wrapper">
+                                    <input 
+                                        type="text" 
+                                        id="volunteer-search" 
+                                        class="form-input" 
+                                        placeholder="Digite o nome..."
+                                        autocomplete="off"
+                                    >
+                                    <div class="search-spinner hidden">
+                                        <div class="spinner"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Volunteer Info -->
+                            <div id="volunteer-info" class="volunteer-info hidden">
+                                <div class="volunteer-details">
+                                    <div class="volunteer-main">
+                                        <p class="volunteer-name" id="volunteer-name">--</p>
+                                        <p class="volunteer-phone" id="volunteer-phone">--</p>
+                                    </div>
+                                    <div class="volunteer-meta">
+                                        <p id="volunteer-date">--</p>
+                                        <p id="volunteer-time">--</p>
+                                    </div>
+                                </div>
+                                <div class="volunteer-session">
+                                    <span>Sessão: </span>
+                                    <span id="volunteer-session">--</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Return Items Form -->
+                    <form id="checkout-form" class="form-card hidden">
+                        <div class="form-header">
+                            <h2>Devolver Itens</h2>
+                            <p>Marque os itens que estão sendo devolvidos</p>
+                        </div>
+
+                        <div class="form-content">
+                            <div class="form-field">
+                                <div class="checkbox-group" id="return-items-group">
+                                    <!-- Items will be populated dynamically -->
+                                </div>
+                            </div>
+
+                            <!-- Warning for pending items -->
+                            <div id="pending-items-warning" class="alert alert-warning hidden">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                                    <line x1="12" x2="12" y1="8" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                    <line x1="12" x2="12.01" y1="16" y2="16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                                <span id="pending-items-text">--</span>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-full" id="checkout-submit" disabled>
+                                <span class="btn-text">Confirmar Check-out</span>
+                                <div class="btn-spinner hidden">
+                                    <div class="spinner"></div>
+                                    <span>Registrando...</span>
+                                </div>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+
+        <!-- Toast Notifications -->
+        <div id="toast-container" class="toast-container"></div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="/js/config.js"></script>
+    <script src="/js/utils.js"></script>
+    <script src="/js/api.js"></script>
+    <script src="/js/validation.js"></script>
+    <script src="/js/ui.js"></script>
+    <script src="/js/checkin.js"></script>
+    <script src="/js/checkout.js"></script>
+    <script src="/js/app.js"></script>
+</body>
 </html>
