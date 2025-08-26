@@ -12,7 +12,10 @@ const CheckIn = {
      * Initialize check-in functionality
      */
     init() {
-        this.setupFormHandlers();
+        const form = document.getElementById('checkin-form');
+        if (form) {
+            form.addEventListener('submit', this.handleSubmit.bind(this));
+        }
         this.setupRealTimeValidation();
         Utils.log('CheckIn module initialized');
     },
@@ -128,58 +131,32 @@ const CheckIn = {
         UI.setButtonLoading('checkin-submit', true);
 
         try {
-            // Submit check-in
-            const result = await API.submitCheckin(formData);
-
-            if (result.success) {
-                // Show success message
-                UI.showToast(
-                    'Check-in realizado!',
-                    `${formData.nome} foi registrado com sucesso.`,
-                    'success'
-                );
-
-                // Clear form
-                this.clearForm();
-
-                // Navigate back to home after delay
-                setTimeout(() => {
-                    UI.navigateTo('home');
-                }, 2000);
-
-                // Vibrate success pattern
-                Utils.vibrate([100, 50, 100, 50, 200]);
-
-            } else {
-                throw new Error(result.message || 'Erro desconhecido');
-            }
-
+            // Salva no IndexedDB
+            const dataToSave = { ...formData, timestamp: Utils.getCurrentTimestamp(), type: 'check-in' };
+            await window.IndexedDB.addCheckin(dataToSave);
+            // Cache para autocomplete
+            await window.IndexedDB.addVolunteerCache({ nome: formData.nome, telefone: formData.telefone });
+            UI.showToast(
+                'Check-in realizado!',
+                `${formData.nome} foi registrado com sucesso.`,
+                'success'
+            );
+            this.clearForm();
+            setTimeout(() => {
+                UI.navigateTo('home');
+            }, 2000);
+            Utils.vibrate([100, 50, 100, 50, 200]);
         } catch (error) {
             Utils.logError('Check-in submission failed', error);
-
-            let errorMessage = 'Erro interno do servidor';
-            
-            if (error.message.includes('duplicate')) {
+            let errorMessage = 'Erro ao salvar localmente. Tente novamente.';
+            if (error.message && error.message.includes('duplicate')) {
                 errorMessage = 'Este voluntário já fez check-in hoje';
-            } else if (error.message.includes('network')) {
-                errorMessage = 'Erro de conexão. Verifique sua internet.';
-            } else if (error.message.includes('timeout')) {
-                errorMessage = 'Tempo limite excedido. Tente novamente.';
+            } else if (error.message && error.message.includes('Failed to fetch')) {
+                errorMessage = 'Erro ao salvar localmente. Libere espaço no navegador ou tente em outro dispositivo.';
             } else if (error.message) {
                 errorMessage = error.message;
             }
-
             UI.showToast('Erro no check-in', errorMessage, 'error');
-
-            // If offline, show offline message
-            if (!Utils.isOnline()) {
-                UI.showToast(
-                    'Modo offline',
-                    'Check-in salvo localmente. Será enviado quando voltar online.',
-                    'warning'
-                );
-            }
-
         } finally {
             this.isSubmitting = false;
             UI.setButtonLoading('checkin-submit', false);
@@ -242,14 +219,14 @@ const CheckIn = {
 
         switch (fieldName) {
             case 'nome':
-                const nameValidation = Validation.validateVolunteerName(value);
+                const nameValidation = Validation.validateNome(value);
                 if (!nameValidation.isValid) {
                     error = nameValidation.error;
                 }
                 break;
 
             case 'telefone':
-                const phoneValidation = Validation.validatePhone(value);
+                const phoneValidation = Validation.validateTelefone(value);
                 if (!phoneValidation.isValid) {
                     error = phoneValidation.error;
                 }
@@ -387,6 +364,13 @@ const CheckIn = {
             nameInput.focus();
         }
     },
+
+    /**
+     * Save check-in data to local storage
+     * @param {Object} data - Check-in data
+     * @returns {Object} Success status
+     */
+    // saveCheckinData removido (agora usando IndexedDB)
 
     /**
      * Pre-fill form with volunteer data

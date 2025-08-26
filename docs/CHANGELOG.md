@@ -1,3 +1,8 @@
+# 2025-08-25
+- Todos os fluxos principais migrados para IndexedDB (check-in, checkout, busca, exportação, estatísticas)
+- Removido uso de Local Storage para dados principais
+- Exportação CSV agora lê direto do IndexedDB
+- Compatibilidade total com GitHub Pages e uso offline
 # Changelog
 
 Sistema de Check-in/Check-out de Voluntários - Igreja Central

@@ -1,27 +1,27 @@
+
 # 🏛️ Sistema de Check-in/Check-out - Igreja Central
 
-Sistema PWA (Progressive Web App) para controle de entrada e saída de voluntários da igreja, com rastreamento de equipamentos e funcionalidade offline.
+Sistema PWA (Progressive Web App) para controle de entrada e saída de voluntários da igreja, com rastreamento de equipamentos e funcionalidade offline. **Agora 100% local, sem dependência de backend ou Google Sheets, usando IndexedDB para armazenamento robusto.**
 
 ## 🚀 Características
 
 - **📱 PWA Nativo**: Instalável em dispositivos móveis e desktop
 - **🌐 Offline-First**: Funciona sem conexão à internet
-- **📊 Google Sheets**: Backend integrado com planilhas Google
+- **� IndexedDB**: Armazenamento local robusto, sem limite prático de registros
 - **⚡ Zero Dependências**: Vanilla JavaScript puro
 - **🎨 Mobile-First**: Interface otimizada para tablets e smartphones
-- **🔄 Sync Automático**: Sincronização automática quando online
+- **🔄 Exportação CSV**: Backup e portabilidade dos dados direto do navegador
 - **🔔 Notificações**: Toast messages e feedback visual
 - **♿ Acessível**: Suporte completo a leitores de tela
 
 ## 🏗️ Arquitetura
 
 ```
-PWA Frontend ↔ Google Apps Script ↔ Google Sheets
+PWA Frontend (Vanilla JS) + IndexedDB (local) + Service Worker
 ```
 
 - **Frontend**: Vanilla JavaScript PWA
-- **Backend**: Google Apps Script (serverless)
-- **Database**: Google Sheets
+- **Database**: IndexedDB (no navegador)
 - **Hosting**: GitHub Pages (gratuito)
 - **Cache**: Service Worker + IndexedDB
 
@@ -39,7 +39,8 @@ PWA Frontend ↔ Google Apps Script ↔ Google Sheets
 │   ├── config.js       # Configurações centrais
 │   ├── utils.js        # Funções utilitárias
 │   ├── validation.js   # Validação de formulários
-│   ├── api.js          # Integração com Google Apps Script
+│   ├── indexeddb.js    # Utilitário IndexedDB local
+│   ├── api.js          # (Obsoleto) Integração antiga com Google Apps Script
 │   ├── ui.js           # Controle de interface
 │   ├── checkin.js      # Lógica de check-in
 │   └── checkout.js     # Lógica de check-out
@@ -47,9 +48,9 @@ PWA Frontend ↔ Google Apps Script ↔ Google Sheets
 │   ├── icons/          # Ícones PWA
 │   └── images/         # Imagens do app
 └── docs/               # Documentação completa
-    ├── SETUP.md        # Guia de instalação
-    ├── API.md          # Documentação da API
-    └── CHANGELOG.md    # Histórico de mudanças
+  ├── CHANGELOG.md    # Histórico de mudanças
+  ├── todo.md         # Próximos passos
+  ├── status.md       # Status atual do projeto
 ```
 
 ## ⚡ Início Rápido
@@ -61,53 +62,17 @@ git clone https://github.com/seu-usuario/church-volunteer-checkin.git
 cd church-volunteer-checkin
 ```
 
-### 2. Instale Dependências (Desenvolvimento)
+### 2. Deploy no GitHub Pages
 
-```bash
-npm install
-```
-
-### 3. Execute Localmente
-
-```bash
-npm start
-# ou
-npm run dev
-```
-
-Acesse: `http://localhost:8080`
-
-### 4. Build para Produção
-
-```bash
-npm run build
-```
+Basta subir os arquivos para o repositório e ativar o GitHub Pages. Não há dependências de backend ou configuração extra.
 
 ## 🔧 Configuração
 
-### Frontend (js/config.js)
+### Configuração
 
-```javascript
-const CONFIG = {
-  CHURCH: {
-    NAME: 'Igreja Central',
-    SESSIONS: ['1º Culto', '2º Culto', 'Escola Bíblica']
-  },
-  API: {
-    BASE_URL: 'https://script.google.com/macros/s/{SCRIPT_ID}/exec'
-  }
-};
-```
+O sistema já está pronto para uso local. Basta abrir o `index.html` no navegador ou acessar via GitHub Pages.
 
-### Backend (Google Apps Script)
 
-1. Crie uma nova planilha Google Sheets
-2. Abra Apps Script (`script.google.com`)
-3. Implemente os endpoints da API
-4. Publique como web app
-5. Configure as permissões
-
-Ver [docs/API.md](docs/API.md) para detalhes completos.
 
 ## 📱 Funcionalidades
 
@@ -125,8 +90,8 @@ Ver [docs/API.md](docs/API.md) para detalhes completos.
 
 ### ✅ Funcionalidade Offline
 - Cache inteligente de recursos
-- Armazenamento local de dados
-- Sincronização automática
+- Armazenamento local de dados (IndexedDB)
+- Exportação CSV para backup
 - Indicadores de status de conexão
 
 ### ✅ Interface Responsiva
@@ -140,35 +105,26 @@ Ver [docs/API.md](docs/API.md) para detalhes completos.
 ### GitHub Pages (Recomendado)
 
 1. **Configure o repositório:**
-   ```bash
-   git add .
-   git commit -m "Deploy PWA"
-   git push origin main
-   ```
+  ```bash
+  git add .
+  git commit -m "Deploy PWA local IndexedDB"
+  git push origin main
+  ```
 
 2. **Ative GitHub Pages:**
-   - Settings → Pages
-   - Source: Deploy from branch
-   - Branch: main / root
+  - Settings → Pages
+  - Source: Deploy from branch
+  - Branch: main / root
 
 3. **Configure domínio personalizado (opcional):**
-   - Adicione arquivo `CNAME`
-   - Configure DNS do domínio
-
-### Outros Provedores
-
-- **Netlify**: Arraste a pasta do projeto
-- **Vercel**: Conecte o repositório GitHub
-- **Firebase Hosting**: `firebase deploy`
-
-Ver [docs/SETUP.md](docs/SETUP.md) para instruções detalhadas.
+  - Adicione arquivo `CNAME`
+  - Configure DNS do domínio
 
 ## 🔒 Segurança
 
 - **HTTPS obrigatório** para funcionalidade PWA
 - **CSP headers** recomendados
-- **Rate limiting** no Google Apps Script
-- **Validação** client-side e server-side
+- **Validação** client-side
 - **Sanitização** de dados de entrada
 
 ## 🧪 Testes
@@ -204,25 +160,21 @@ npm run lighthouse
 
 ## 📝 Documentação
 
-- **[SETUP.md](docs/SETUP.md)**: Guia completo de instalação
-- **[API.md](docs/API.md)**: Documentação da API
 - **[CHANGELOG.md](docs/CHANGELOG.md)**: Histórico de mudanças
+- **[todo.md](docs/todo.md)**: Próximos passos
+- **[status.md](docs/status.md)**: Status atual do projeto
 
 ## 🐛 Problemas Conhecidos
 
 - Service Worker requer HTTPS em produção
-- IndexedDB não funciona em modo privado
+- IndexedDB pode não funcionar em modo privado em alguns navegadores
 - Push notifications requerem configuração adicional
-
-Ver [docs/SETUP.md#troubleshooting](docs/SETUP.md#troubleshooting) para soluções.
 
 ## 🗺️ Roadmap
 
-- [ ] **Backend**: Google Apps Script API
-- [ ] **Database**: Configuração Google Sheets
-- [ ] **Auth**: Sistema de autenticação
-- [ ] **Icons**: Criação de ícones PWA
-- [ ] **Tests**: Testes automatizados
+- [ ] **Importação de CSV**: Restaurar dados
+- [ ] **Melhorias de UX para IndexedDB**
+- [ ] **Testes automatizados**
 - [ ] **CI/CD**: Pipeline de deploy
 - [ ] **Analytics**: Dashboard de relatórios
 - [ ] **Push**: Notificações push
@@ -237,7 +189,7 @@ MIT License - veja [LICENSE](LICENSE) para detalhes.
 Desenvolvido com ❤️ para a **Igreja Central**
 
 - **Tecnologias**: HTML5, CSS3, Vanilla JavaScript
-- **APIs**: Google Apps Script, Google Sheets
+- **APIs**: (Removido) Google Apps Script, Google Sheets
 - **Hosting**: GitHub Pages
 - **Design**: Mobile-first, Acessível
 

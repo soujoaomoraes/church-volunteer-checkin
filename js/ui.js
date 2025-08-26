@@ -18,10 +18,16 @@ const UI = {
         this.updateConnectionStatus();
         this.updateCurrentTime();
         this.loadStats();
-        
+
+        // Mensagem informativa sobre dados locais
+        const infoDiv = document.getElementById('local-storage-info');
+        if (infoDiv) {
+            infoDiv.innerHTML = '<b>Atenção:</b> Todos os dados são salvos apenas neste dispositivo. Para backup ou transferência, utilize o botão "Exportar CSV".';
+        }
+
         // Start periodic updates
         this.startPeriodicUpdates();
-        
+
         Utils.log('UI initialized');
     },
 
@@ -38,6 +44,10 @@ const UI = {
             this.navigateTo('checkout');
         });
 
+        document.getElementById('export-csv-btn')?.addEventListener('click', () => {
+            Reports.exportCheckinCheckoutToCsv();
+        });
+
         document.getElementById('back-btn')?.addEventListener('click', () => {
             this.navigateTo('home');
         });
@@ -45,11 +55,11 @@ const UI = {
         // Online/offline status
         window.addEventListener('online', () => {
             this.updateConnectionStatus();
-            this.syncOfflineData();
         });
 
         window.addEventListener('offline', () => {
             this.updateConnectionStatus();
+            UI.showToast('Modo offline', 'O sistema funciona normalmente, mas os dados permanecem apenas neste dispositivo.', 'info');
         });
 
         // Phone input formatting
@@ -117,7 +127,6 @@ const UI = {
             pageSubtitle.textContent = 'Igreja Central';
         } else {
             backBtn.classList.remove('hidden');
-            
             if (page === 'checkin') {
                 pageTitle.textContent = 'Check-in';
                 pageSubtitle.textContent = 'Registrar entrada';
@@ -279,12 +288,14 @@ const UI = {
                 this.clearVolunteerSearch();
                 return;
             }
-
             this.showSearchSpinner(true);
-
             try {
-                const volunteer = await API.searchVolunteer(query);
-                
+                // Busca local no IndexedDB
+                const checkins = await window.IndexedDB.getAllCheckins();
+                const volunteer = checkins
+                    .filter(c => c.type === 'check-in' && c.nome.toLowerCase().includes(query.toLowerCase()))
+                    .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+                    .find(c => !c.checkoutTimestamp);
                 if (volunteer) {
                     this.showVolunteerInfo(volunteer);
                 } else {
@@ -297,7 +308,6 @@ const UI = {
                 this.showSearchSpinner(false);
             }
         });
-
         input.addEventListener('input', (e) => {
             debouncedSearch(e.target.value);
         });
@@ -538,7 +548,8 @@ const UI = {
      */
     async loadStats() {
         try {
-            const stats = await API.getStats();
+            // const stats = await API.getStats(); // Removed API call
+            const stats = this.getStatsFromLocalStorage(); // Get stats from local storage
             
             document.getElementById('stat-present').textContent = stats.present || '--';
             document.getElementById('stat-today').textContent = stats.today || '--';
@@ -554,6 +565,35 @@ const UI = {
     },
 
     /**
+     * Get statistics from local storage
+     * @returns {Object} Statistics data
+     */
+    getStatsFromLocalStorage() {
+        // Agora busca stats do IndexedDB
+        return window.IndexedDB.getAllCheckins().then(allCheckins => {
+            const today = Utils.formatDate(new Date());
+            let checkinsToday = 0;
+            let checkoutsToday = 0;
+            let activeVolunteers = 0;
+            allCheckins.forEach(record => {
+                if (record.type === 'check-in' && record.data === today) {
+                    checkinsToday++;
+                    if (!record.checkoutTimestamp) {
+                        activeVolunteers++;
+                    }
+                } else if (record.type === 'check-out' && record.checkoutData === today) {
+                    checkoutsToday++;
+                }
+            });
+            return {
+                present: activeVolunteers,
+                today: checkinsToday,
+                pending: allCheckins.filter(c => c.type === 'check-in' && !c.checkoutTimestamp).length
+            };
+        });
+    },
+
+    /**
      * Start periodic updates
      */
     startPeriodicUpdates() {
@@ -564,7 +604,7 @@ const UI = {
 
         // Update stats every 5 minutes
         setInterval(() => {
-            if (this.currentPage === 'home' && Utils.isOnline()) {
+            if (this.currentPage === 'home') { // Always update stats on home page
                 this.loadStats();
             }
         }, 300000);
@@ -579,21 +619,8 @@ const UI = {
      * Sync offline data when coming back online
      */
     async syncOfflineData() {
-        if (!CONFIG.FEATURES.OFFLINE_SUPPORT) return;
-
-        try {
-            const result = await API.syncOfflineData();
-            
-            if (result.synced > 0) {
-                this.showToast(
-                    'Dados sincronizados',
-                    `${result.synced} registro(s) enviado(s) com sucesso`,
-                    'success'
-                );
-            }
-        } catch (error) {
-            Utils.logError('Offline sync failed', error);
-        }
+        // Sincronização removida: dados são sempre locais
+        Utils.log('Sincronização não aplicável: app 100% local.');
     },
 
     /**

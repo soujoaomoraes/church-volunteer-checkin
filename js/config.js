@@ -4,9 +4,7 @@
  */
 
 const CONFIG = {
-    // API Configuration
-    API_URL: 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec',
-    API_TIMEOUT: 10000, // 10 seconds
+    // API Configuration removida: sistema 100% local, sem integração externa
     
     // Application Info
     APP_NAME: 'Sistema de Voluntários',
@@ -57,8 +55,8 @@ const CONFIG = {
     STORAGE_KEYS: {
         VOLUNTEER_CACHE: 'volunteer_cache',
         LAST_SYNC: 'last_sync',
-        OFFLINE_QUEUE: 'offline_queue',
-        USER_PREFERENCES: 'user_preferences'
+        USER_PREFERENCES: 'user_preferences',
+        CHECKINS: 'checkins' // Dados de check-in/check-out
     },
     
     // Error Messages

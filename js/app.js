@@ -58,7 +58,8 @@ class App {
             { name: 'API', module: API },
             { name: 'UI', module: UI },
             { name: 'CheckIn', module: CheckIn },
-            { name: 'CheckOut', module: CheckOut }
+            { name: 'CheckOut', module: CheckOut },
+            { name: 'Reports', module: Reports } // New module
         ];
 
         for (const step of initSteps) {
@@ -75,25 +76,15 @@ class App {
         }
 
         // Test API connection
-        await this.testAPIConnection();
+        // await this.testAPIConnection(); // Not needed for local storage app
     }
 
     /**
      * Test API connection
      */
     async testAPIConnection() {
-        try {
-            const isConnected = await API.testConnection();
-            
-            if (isConnected) {
-                Utils.log('API connection test successful');
-            } else {
-                Utils.log('API connection test failed - offline mode');
-            }
-        } catch (error) {
-            Utils.logError('API connection test error', error);
-            // Don't throw - app should work offline
-        }
+        // No API connection to test for local storage app
+        Utils.log('API connection test not applicable for local storage app.');
     }
 
     /**
@@ -197,11 +188,11 @@ class App {
                 }
                 
                 // Check for offline data to sync
-                if (Utils.isOnline() && API && typeof API.syncOfflineData === 'function') {
-                    API.syncOfflineData().catch(error => {
-                        Utils.logError('Auto sync failed', error);
-                    });
-                }
+                // if (Utils.isOnline() && API && typeof API.syncOfflineData === 'function') {
+                //     API.syncOfflineData().catch(error => {
+                //         Utils.logError('Auto sync failed', error);
+                //     });
+                // }
                 
                 // Refresh stats if on home page
                 if (UI && UI.currentPage === 'home' && typeof UI.loadStats === 'function') {

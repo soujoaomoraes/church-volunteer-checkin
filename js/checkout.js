@@ -14,7 +14,10 @@ const CheckOut = {
      */
     init() {
         this.setupSearchHandlers();
-        this.setupFormHandlers();
+        const form = document.getElementById('checkout-form');
+        if (form) {
+            form.addEventListener('submit', this.handleSubmit.bind(this));
+        }
         Utils.log('CheckOut module initialized');
     },
 
@@ -88,11 +91,14 @@ const CheckOut = {
                 throw new Error(validation.error);
             }
 
-            // Search for volunteer
-            const volunteer = await API.searchVolunteer(query);
-
+            // Busca voluntário no IndexedDB
+            const checkins = await window.IndexedDB.getAllCheckins();
+            const volunteer = checkins
+                .filter(c => c.type === 'check-in' && c.nome.toLowerCase().includes(query.toLowerCase()))
+                .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+                .find(c => !c.checkoutTimestamp);
             if (volunteer) {
-                this.showVolunteerFound(volunteer);
+                this.showVolunteerFound({ ...volunteer });
             } else {
                 this.showVolunteerNotFound(query);
             }
@@ -290,7 +296,8 @@ const CheckOut = {
 
         try {
             // Submit check-out
-            const result = await API.submitCheckout(formData);
+            // const result = await API.submitCheckout(formData); // Removed API call
+            const result = this.updateCheckinWithCheckout(formData); // Update local storage
 
             if (result.success) {
                 // Show success message
@@ -386,6 +393,45 @@ const CheckOut = {
         };
 
         return data;
+    },
+
+    /**
+     * Search for volunteer data in local storage
+     * @param {string} query - Search query
+     * @returns {Object|null} Volunteer data or null
+     */
+    searchVolunteerData(query) {
+    // Função mantida apenas para compatibilidade, mas não usada mais
+    return null;
+    },
+
+    /**
+     * Update check-in record with check-out information
+     * @param {Object} data - Check-out data
+     * @returns {Object} Success status
+     */
+    updateCheckinWithCheckout(data) {
+        // Atualiza registro de check-in no IndexedDB
+        return window.IndexedDB.getAllCheckins().then(checkins => {
+            const index = checkins.findIndex(c => c.id === data.checkin_id);
+            if (index !== -1) {
+                const checkin = checkins[index];
+                checkin.checkoutTimestamp = Utils.getCurrentTimestamp();
+                checkin.checkoutData = data.checkoutData;
+                checkin.checkoutHora = data.checkoutHora;
+                checkin.returnedItems = data.returnedItems;
+                checkin.pendingItems = data.pendingItems;
+                checkin.observacoesCheckout = data.observacoes;
+                // Salva todos novamente (simples, mas eficiente para poucos registros)
+                return window.IndexedDB.clearCheckins().then(() =>
+                    Promise.all(checkins.map(c => window.IndexedDB.addCheckin(c)))
+                ).then(() => ({ success: true }));
+            }
+            return { success: false, message: 'Check-in record not found' };
+        }).catch(error => {
+            Utils.logError('Failed to update check-in with checkout data', error);
+            return { success: false, message: error.message };
+        });
     },
 
     /**
