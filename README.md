@@ -1,198 +1,68 @@
+# Sistema de Check-in/Checkout de Voluntários - Paz Church
 
-# 🏛️ Sistema de Check-in/Check-out - Igreja Central
+Este projeto é um sistema web para o controle de check-in e checkout de voluntários e o gerenciamento de materiais (crachás, rádios, etc.) para a Igreja Paz Church. A aplicação foi projetada para funcionar 100% offline e é construída com tecnologias web gratuitas.
 
-Sistema PWA (Progressive Web App) para controle de entrada e saída de voluntários da igreja, com rastreamento de equipamentos e funcionalidade offline. **Agora 100% local, sem dependência de backend ou Google Sheets, usando IndexedDB para armazenamento robusto.**
+## Tecnologias Principais
 
-## 🚀 Características
+- **Frontend:** HTML5, CSS3, Vanilla JavaScript (ES6+)
+- **Banco de Dados:** IndexedDB (nativo do navegador)
+- **Hospedagem:** GitHub Pages
+- **Ambiente de Dev:** Node.js para servidor local e gerenciamento de pacotes.
 
-- **📱 PWA Nativo**: Instalável em dispositivos móveis e desktop
-- **🌐 Offline-First**: Funciona sem conexão à internet
-- **� IndexedDB**: Armazenamento local robusto, sem limite prático de registros
-- **⚡ Zero Dependências**: Vanilla JavaScript puro
-- **🎨 Mobile-First**: Interface otimizada para tablets e smartphones
-- **🔄 Exportação CSV**: Backup e portabilidade dos dados direto do navegador
-- **🔔 Notificações**: Toast messages e feedback visual
-- **♿ Acessível**: Suporte completo a leitores de tela
+## Configuração do Ambiente de Desenvolvimento
 
-## 🏗️ Arquitetura
+Para configurar o ambiente de desenvolvimento local, siga estes passos:
 
-```
-PWA Frontend (Vanilla JS) + IndexedDB (local) + Service Worker
-```
+1.  **Clone o repositório:**
+    ```bash
+    git clone [URL_DO_REPOSITORIO]
+    cd church-volunteer-checkin
+    ```
 
-- **Frontend**: Vanilla JavaScript PWA
-- **Database**: IndexedDB (no navegador)
-- **Hosting**: GitHub Pages (gratuito)
-- **Cache**: Service Worker + IndexedDB
+2.  **Instale as dependências:**
+    O projeto usa o `npm` para gerenciar pacotes de desenvolvimento (atualmente, apenas para o servidor local). Execute o comando na raiz do projeto:
+    ```bash
+    npm install
+    ```
 
-## 📁 Estrutura do Projeto
+## Executando o Servidor Local
 
-```
-├── index.html          # Página principal do PWA
-├── sw.js               # Service Worker
-├── manifest.json       # Manifesto PWA
-├── package.json        # Scripts e dependências de dev
-├── css/
-│   └── styles.css      # Sistema de design CSS
-├── js/
-│   ├── app.js          # Inicialização da aplicação
-│   ├── config.js       # Configurações centrais
-│   ├── utils.js        # Funções utilitárias
-│   ├── validation.js   # Validação de formulários
-│   ├── indexeddb.js    # Utilitário IndexedDB local
-│   ├── api.js          # (Obsoleto) Integração antiga com Google Apps Script
-│   ├── ui.js           # Controle de interface
-│   ├── checkin.js      # Lógica de check-in
-│   └── checkout.js     # Lógica de check-out
-├── assets/
-│   ├── icons/          # Ícones PWA
-│   └── images/         # Imagens do app
-└── docs/               # Documentação completa
-  ├── CHANGELOG.md    # Histórico de mudanças
-  ├── todo.md         # Próximos passos
-  ├── status.md       # Status atual do projeto
-```
-
-## ⚡ Início Rápido
-
-### 1. Clone o Repositório
+Para visualizar e testar a aplicação, inicie o servidor local. Este comando utiliza o pacote `serve` para hospedar os arquivos do projeto.
 
 ```bash
-git clone https://github.com/seu-usuario/church-volunteer-checkin.git
-cd church-volunteer-checkin
+npm start
 ```
 
-### 2. Deploy no GitHub Pages
+Após a execução, o servidor estará disponível em `http://localhost:3000` (ou em outra porta, se a 3000 estiver ocupada).
 
-Basta subir os arquivos para o repositório e ativar o GitHub Pages. Não há dependências de backend ou configuração extra.
+## Executando os Testes
 
-## 🔧 Configuração
+O projeto possui uma suíte de testes unitários para garantir a qualidade e o funcionamento do core do sistema.
 
-### Configuração
+1.  Certifique-se de que o servidor local esteja rodando (`npm start`).
+2.  Abra o seguinte arquivo no seu navegador:
+    [http://localhost:3000/assets/js/tests/test-runner.html](http://localhost:3000/assets/js/tests/test-runner.html)
 
-O sistema já está pronto para uso local. Basta abrir o `index.html` no navegador ou acessar via GitHub Pages.
+Os resultados dos testes serão exibidos na página e detalhados no console do desenvolvedor (F12).
 
+## Estrutura do Projeto
 
-
-## 📱 Funcionalidades
-
-### ✅ Check-in de Voluntários
-- Formulário com validação em tempo real
-- Seleção de equipamentos
-- Formatação automática de telefone
-- Autocomplete de nomes
-
-### ✅ Check-out de Voluntários
-- Busca por nome ou telefone
-- Controle de devolução de itens
-- Rastreamento de pendências
-- Histórico de atividades
-
-### ✅ Funcionalidade Offline
-- Cache inteligente de recursos
-- Armazenamento local de dados (IndexedDB)
-- Exportação CSV para backup
-- Indicadores de status de conexão
-
-### ✅ Interface Responsiva
-- Design mobile-first
-- Suporte a touch e teclado
-- Modo escuro automático
-- Acessibilidade completa
-
-## 🚀 Deploy
-
-### GitHub Pages (Recomendado)
-
-1. **Configure o repositório:**
-  ```bash
-  git add .
-  git commit -m "Deploy PWA local IndexedDB"
-  git push origin main
-  ```
-
-2. **Ative GitHub Pages:**
-  - Settings → Pages
-  - Source: Deploy from branch
-  - Branch: main / root
-
-3. **Configure domínio personalizado (opcional):**
-  - Adicione arquivo `CNAME`
-  - Configure DNS do domínio
-
-## 🔒 Segurança
-
-- **HTTPS obrigatório** para funcionalidade PWA
-- **CSP headers** recomendados
-- **Validação** client-side
-- **Sanitização** de dados de entrada
-
-## 🧪 Testes
-
-```bash
-# Servidor de desenvolvimento
-npm run dev
-
-# Teste PWA (HTTPS)
-npm run serve:https
-
-# Validação de código
-npm run lint
-
-# Teste de performance
-npm run lighthouse
+```
+church-volunteer-checkin/
+├── assets/                # Arquivos públicos (CSS, JS, imagens)
+│   ├── css/               # Estilos
+│   └── js/                # Scripts
+│       ├── components/    # Componentes de UI (futuro)
+│       ├── services/      # Lógica de negócio (ex: VolunteerService)
+│       ├── utils/         # Funções auxiliares, validação, etc.
+│       └── tests/         # Testes unitários e executor
+├── .docs/                 # Documentação detalhada do projeto
+├── node_modules/          # Dependências de desenvolvimento
+├── index.html             # Ponto de entrada da aplicação
+├── package.json           # Definições do projeto Node.js
+└── README.md              # Este arquivo
 ```
 
-## 📊 Monitoramento
+## Documentação Detalhada
 
-- **Google Analytics**: Métricas de uso
-- **Lighthouse**: Performance e PWA score
-- **Apps Script Logs**: Debugging backend
-- **Browser DevTools**: Debug frontend
-
-## 🤝 Contribuição
-
-1. Fork o projeto
-2. Crie uma branch: `git checkout -b feature/nova-funcionalidade`
-3. Commit: `git commit -m 'Adiciona nova funcionalidade'`
-4. Push: `git push origin feature/nova-funcionalidade`
-5. Abra um Pull Request
-
-## 📝 Documentação
-
-- **[CHANGELOG.md](docs/CHANGELOG.md)**: Histórico de mudanças
-- **[todo.md](docs/todo.md)**: Próximos passos
-- **[status.md](docs/status.md)**: Status atual do projeto
-
-## 🐛 Problemas Conhecidos
-
-- Service Worker requer HTTPS em produção
-- IndexedDB pode não funcionar em modo privado em alguns navegadores
-- Push notifications requerem configuração adicional
-
-## 🗺️ Roadmap
-
-- [ ] **Importação de CSV**: Restaurar dados
-- [ ] **Melhorias de UX para IndexedDB**
-- [ ] **Testes automatizados**
-- [ ] **CI/CD**: Pipeline de deploy
-- [ ] **Analytics**: Dashboard de relatórios
-- [ ] **Push**: Notificações push
-- [ ] **Multi-church**: Suporte múltiplas igrejas
-
-## 📄 Licença
-
-MIT License - veja [LICENSE](LICENSE) para detalhes.
-
-## 🙏 Créditos
-
-Desenvolvido com ❤️ para a **Igreja Central**
-
-- **Tecnologias**: HTML5, CSS3, Vanilla JavaScript
-- **APIs**: (Removido) Google Apps Script, Google Sheets
-- **Hosting**: GitHub Pages
-- **Design**: Mobile-first, Acessível
-
----
-
-**📱 Instale o app:** Visite o site no seu dispositivo e clique em "Instalar" ou "Adicionar à tela inicial"
+Para um entendimento aprofundado da arquitetura, requisitos e decisões de design, consulte a documentação na pasta `.docs/`.

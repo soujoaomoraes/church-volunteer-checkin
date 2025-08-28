@@ -1,17 +1,24 @@
 {
   "name": "church-volunteer-checkin",
   "version": "1.0.0",
-  "description": "Sistema de check-in e check-out para voluntários da Igreja Central",
-  "main": "index.html",
+  "main": "service-worker.js",
   "scripts": {
-    "start": "http-server -p 8000 -c-1 --cors",
-    "dev": "http-server -p 8000 -c-1 --cors",
-    "serve": "http-server -p 8000 -c-1 --cors"
+    "start": "serve",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": ["pwa", "church", "volunteer", "checkin"],
-  "author": "João Moraes",
-  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/soujoaomoraes/church-volunteer-checkin.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/soujoaomoraes/church-volunteer-checkin/issues"
+  },
+  "homepage": "https://github.com/soujoaomoraes/church-volunteer-checkin#readme",
+  "description": "",
   "devDependencies": {
-    "http-server": "^14.1.1"
+    "serve": "^14.2.4"
   }
 }
